@@ -49,11 +49,39 @@ public class ChunkALuck {
     }
     public static void ResolveBet(String betType,Wallet userWallet)
     {
+        Scanner inputScanner = new Scanner(System.in);
+        boolean correctInput = false;
+        while (!correctInput)
+        {
+            System.out.println("The wallet contains"+String.format(".%2f",userWallet.check()));
+            System.out.print("Please enter how much money you want to bet>");
+            if(inputScanner.hasNextDouble())
+            {
+                double userInputBet =inputScanner.nextDouble();
+                if(userWallet.get(userInputBet))
+                {
+                    correctInput = true;
+
+                }
+                else
+                {
+                    System.out.println("There is no enough money to bet,please try again");
+                    inputScanner.nextLine();
+                }
+
+
+            }
+            else
+            {
+                System.out.print("Your input is not vailed,please try again");
+                inputScanner.nextLine();
+            }
+        }
 
     }
     public static void summaryMessage(double userInitalCash,Wallet userWallet)
     {
-        double cashDifference = 0.0;
+        double cashDifference = Constant.ZERO;
         String cashCompared = null;
         if(userInitalCash>userWallet.check())
         {
@@ -66,7 +94,7 @@ public class ChunkALuck {
             cashCompared="\nOverall, you won "+String.format("%.2f",cashDifference)+".";
         }
         System.out.println("You started with "+String.format("%.2f",userInitalCash)+" and you "
-                + "now have €"+String.format("%.2f",userWallet.check())+cashCompared);
+                + "now have "+String.format("%.2f",userWallet.check())+cashCompared);
     }
     public static void main(String []args)
     {
@@ -79,8 +107,8 @@ public class ChunkALuck {
             System.out.print("Please put some money into your wallet>");
             if(!inputScanner.hasNextDouble())
             {
-                System.out.print("Your input is not vaild,please try again");
-                inputScanner.next();
+                System.out.println("Your input is not vaild,please try again");
+                inputScanner.nextLine();
             }
             else
             {
@@ -133,7 +161,7 @@ public class ChunkALuck {
                 terminateGame = true;
                 // summary message
                 summaryMessage(userInitalCash,wallet);
-                System.out.print("Goodbye.");
+                System.out.print("You stop the game,goodbye.");
             }
             else
             {
@@ -143,6 +171,7 @@ public class ChunkALuck {
             if(wallet.check()==Constant.ZERO)
             {
                 summaryMessage(userInitalCash,wallet);
+                System.out.println("You have ran out of money, unlucky. Goodbye");
             }
 
         }
