@@ -47,6 +47,17 @@ public class ChunkALuck {
         System.out.println("-----------------------------------------------------------------------------------");
 
     }
+    public static boolean judgeTriple(Dice one,Dice two,Dice three)
+    {
+        boolean isTriple = false;
+        if((one.topFace() == two.topFace())&&(two.topFace()==three.topFace()
+        )&&(one.topFace()==three.topFace()))
+        {
+            isTriple = true;
+        }
+        return isTriple;
+    }
+
     public static void ResolveBet(String betType,Wallet userWallet)
     {
         Scanner inputScanner = new Scanner(System.in);
@@ -61,6 +72,116 @@ public class ChunkALuck {
                 if(userWallet.get(userInputBet))
                 {
                     correctInput = true;
+                    System.out.println("You are betting "+String.format("%.2f",userInputBet)+"on"+betType);
+                    Dice diceOne = new Dice();
+                    Dice diceTwo = new Dice();
+                    Dice diceThree= new Dice();
+                    diceOne.roll();
+                    diceTwo.roll();
+                    diceThree.roll();
+                    boolean checkTriple = false;
+                    boolean selectedTriple = false;
+                    boolean selectedField = false;
+                    boolean selectedHigh = false;
+                    boolean selectedLow = false;
+                    int totalOfThreeDice = diceOne.topFace()+diceTwo.topFace()+diceThree.topFace();
+
+                    if(judgeTriple(diceOne,diceTwo,diceThree))
+                    {
+                        checkTriple = true;
+                        if((totalOfThreeDice==Constant.TRIPLE_LOWEST)||(totalOfThreeDice==Constant.TRIPLE_HIGHEST))
+                        {
+
+                        }
+                        else
+                        {
+                            selectedTriple =true;
+                        }
+                    }
+                    if((totalOfThreeDice>Constant.LOWER_BOUND_OF_FIELD)||(totalOfThreeDice<Constant.UPPER_BOUND_OF_FIELD))
+                    {
+                        selectedField=true;
+                    }
+                    if((totalOfThreeDice>Constant.LOWER_BOUND_OF_HIGH)&&(!checkTriple))
+                    {
+                        selectedHigh = true;
+                    }
+                    if((totalOfThreeDice<Constant.UPPER_BOUND_OF_LOW)&&(!checkTriple))
+                    {
+                        selectedLow = true;
+                    }
+
+                    System.out.println("\nDice One rolled:"+ diceOne.topFace()
+                            +"\nDice Two rolled:"+ diceTwo.topFace()
+                            +"\nDice Three rolled:"+ diceThree.topFace()
+                            +"\nTotal:"+totalOfThreeDice+"\n");
+
+                    switch (betType)
+                    {
+                        case "Triple":
+                            if(selectedTriple)
+                            {
+                                System.out.println("congratulation you won! you bet on Triple ");
+                                userWallet.put((userInputBet*Constant.WINING_MULTIPLE_OF_TRIPLE)+userInputBet);
+                                System.out.println("You have won"+String.format("%.2f",userInputBet*Constant.WINING_MULTIPLE_OF_TRIPLE));
+
+                            }
+                            else
+                            {
+                                System.out.println("Unfortunately  you lose .... you bet on Triple ");
+                                System.out.println("You have lost"+String.format("%.2f",userInputBet));
+
+                            }
+                            break;
+                        case "Field":
+                            if(selectedField)
+                            {
+                                System.out.println("congratulation you won! you bet on Field ");
+                                userWallet.put(userInputBet);
+                                System.out.println("You have won"+String.format("%.2f",userInputBet));
+
+                            }
+                            else
+                            {
+                                System.out.println("Unfortunately  you lose .... you bet on Field ");
+                                System.out.println("You have lost"+String.format("%.2f",userInputBet));
+
+                            }
+                            break;
+                        case "High":
+                            if(selectedHigh)
+                            {
+                                System.out.println("congratulation you won! you bet on High ");
+                                userWallet.put(userInputBet);
+                                System.out.println("You have won"+String.format("%.2f",userInputBet));
+
+                            }
+                            else
+                            {
+                                System.out.println("Unfortunately  you lose .... you bet on High ");
+                                System.out.println("You have lost"+String.format("%.2f",userInputBet));
+
+                            }
+                            break;
+                        case "Low":
+                            if(selectedLow)
+                            {
+                                System.out.println("congratulation you won! you bet on Low ");
+                                userWallet.put(userInputBet);
+                                System.out.println("You have won"+String.format("%.2f",userInputBet));
+
+                            }
+                            else
+                            {
+                                System.out.println("Unfortunately  you lose .... you bet on Low ");
+                                System.out.println("You have lost"+String.format("%.2f",userInputBet));
+
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    System.out.println("The current amount of moeny is"+String.format("%.2f",userWallet.check()));
 
                 }
                 else
@@ -129,12 +250,13 @@ public class ChunkALuck {
 
 
         boolean terminateGame = false;
+        int countTerm = 0;
 
         while (!terminateGame)
         {
             IntroduceingRuleToUser();
             System.out.println("Please enter the type you would like to choose");
-            System.out.print("Please enter either 'Triple','Field'.'High','Low' or 'Quit':\n");
+            System.out.print("Please enter either 'Triple','Field'.'High','Low' or 'Quit'>");
             String userInput = inputScanner.next();
             if(userInput.equalsIgnoreCase("Triple"))
             {
@@ -173,6 +295,7 @@ public class ChunkALuck {
                 summaryMessage(userInitalCash,wallet);
                 System.out.println("You have ran out of money, unlucky. Goodbye");
             }
+            System.out.println("This is "+(++countTerm)+" term of game");
 
         }
     }
