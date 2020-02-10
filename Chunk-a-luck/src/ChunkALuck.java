@@ -32,9 +32,19 @@ Comment:
 */
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.Scanner;
-
+/*
+Bug is when money is zero ,it could not quit may be the approximation reason 0.000000
+ */
 public class ChunkALuck {
+    public static double roundCash(double currentCash)
+    {
+        double cashRounded=currentCash*100;
+        cashRounded = Math.round(cashRounded);
+        cashRounded = cashRounded/100;
+        return cashRounded;
+    }
     public static void IntroduceingRuleToUser()
     {
         //Welcomeing sentence
@@ -69,6 +79,8 @@ public class ChunkALuck {
             if(inputScanner.hasNextDouble())
             {
                 double userInputBet =inputScanner.nextDouble();
+                userInputBet =roundCash(userInputBet);
+                userWallet.setAppromxiation();
                 if(userWallet.get(userInputBet))
                 {
                     correctInput = true;
@@ -137,7 +149,7 @@ public class ChunkALuck {
                             if(selectedField)
                             {
                                 System.out.println("congratulation you won! you bet on Field ");
-                                userWallet.put(userInputBet);
+                                userWallet.put(userInputBet+userInputBet);
                                 System.out.println("You have won"+String.format("%.2f",userInputBet));
 
                             }
@@ -152,7 +164,7 @@ public class ChunkALuck {
                             if(selectedHigh)
                             {
                                 System.out.println("congratulation you won! you bet on High ");
-                                userWallet.put(userInputBet);
+                                userWallet.put(userInputBet+userInputBet);
                                 System.out.println("You have won"+String.format("%.2f",userInputBet));
 
                             }
@@ -167,7 +179,7 @@ public class ChunkALuck {
                             if(selectedLow)
                             {
                                 System.out.println("congratulation you won! you bet on Low ");
-                                userWallet.put(userInputBet);
+                                userWallet.put(userInputBet+userInputBet);
                                 System.out.println("You have won"+String.format("%.2f",userInputBet));
 
                             }
@@ -234,6 +246,7 @@ public class ChunkALuck {
             else
             {
                 userInitalCash = inputScanner.nextDouble();
+                userInitalCash = roundCash(userInitalCash);
                 wallet.put(userInitalCash);
                 if(userInitalCash>0)
                 {
@@ -290,8 +303,9 @@ public class ChunkALuck {
                 System.out.println("Invalid Input. Please enter either 'Triple','Field'.'High','Low' or 'Quit'");
             }
 
-            if(wallet.check()==Constant.ZERO)
+            if(roundCash(wallet.check())==0)
             {
+                terminateGame = true;
                 summaryMessage(userInitalCash,wallet);
                 System.out.println("You have ran out of money, unlucky. Goodbye");
             }

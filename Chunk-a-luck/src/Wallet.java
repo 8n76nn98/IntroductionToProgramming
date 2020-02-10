@@ -1,7 +1,15 @@
+import java.math.BigDecimal;
+
 public class Wallet {
     //current cash in wallet
     private double cash;
     //construct wallet with zero cash
+    public void setAppromxiation()
+    {
+        BigDecimal bigDecimal = new BigDecimal(this.cash);
+        this.cash = bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
     public Wallet()
     {
         cash = 0.0;
